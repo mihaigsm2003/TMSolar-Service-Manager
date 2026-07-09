@@ -1,0 +1,24 @@
+# Config local
+config/config.php
+
+# Uploads
+public/uploads/*
+assets/uploads/*
+
+# Backup
+storage/backups/*
+storage/logs/*
+
+# Temp
+storage/cache/*
+storage/temp/*
+
+# VSCode
+.vscode/
+
+# Composer
+/vendor/
+
+# OS
+Thumbs.db
+.DS_Store
