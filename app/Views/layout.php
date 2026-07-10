@@ -39,7 +39,7 @@
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="<?= UrlHelper::to('dashboard') ?>">
                 <?php if ($brandLogo !== ''): ?>
-                    <img src="<?= htmlspecialchars($brandLogo) ?>" alt="<?= htmlspecialchars($brandText ?: 'Brand Logo') ?>" height="32" class="d-inline-block">
+                    <img src="<?= htmlspecialchars($brandLogo) ?>" alt="<?= htmlspecialchars($brandText ?: 'Sigla brandului') ?>" height="32" class="d-inline-block">
                 <?php endif; ?>
                 <?php if ($brandText !== ''): ?>
                     <span><?= htmlspecialchars($brandText) ?></span>
@@ -51,22 +51,24 @@
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav ms-auto">
                     <?php if (!empty($_SESSION['user'])): ?>
-                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('dashboard') ?>">Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('customers') ?>">Customers</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('manufacturers') ?>">Manufacturers</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('device-models') ?>">Device Models</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('devices') ?>">Devices</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('service-orders') ?>">Service Orders</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('dashboard') ?>">Panou</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('customers') ?>">Clienți</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('manufacturers') ?>">Producători</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('device-models') ?>">Modele Dispozitive</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('devices') ?>">Dispozitive</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('service-orders') ?>">Comenzi Service</a></li>
                         <?php if (($currentUser['role'] ?? 'viewer') === 'admin'): ?>
-                            <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('admin/settings') ?>">Settings</a></li>
-                            <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('admin/users') ?>">Users</a></li>
-                            <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('admin/activity-log') ?>">Activity Log</a></li>
+                            <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('admin/settings') ?>">Setări</a></li>
+                            <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('admin/users') ?>">Utilizatori</a></li>
+                            <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('admin/activity-log') ?>">Jurnal Activitate</a></li>
                         <?php endif; ?>
-                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('about.php') ?>">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('logout') ?>">Logout</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('comanda-online') ?>">Comandă Online</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('about.php') ?>">Despre</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('logout') ?>">Ieșire</a></li>
                     <?php else: ?>
-                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('about.php') ?>">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('login') ?>">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('comanda-online') ?>">Comandă Online</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('about.php') ?>">Despre</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('login') ?>">Autentificare</a></li>
                     <?php endif; ?>
                 </ul>
             </div>
@@ -87,7 +89,7 @@
             $authorName = $authorParts[0] ?? $appAuthor;
             $authorOrg = $authorParts[1] ?? 'TMSolar';
             ?>
-            <span><?= htmlspecialchars($appName) ?> v<?= htmlspecialchars($appVersion) ?> | © <?= date('Y') ?> <?= htmlspecialchars($authorOrg) ?> | Developed by <?= htmlspecialchars($authorName) ?></span>
+            <span><?= htmlspecialchars($appName) ?> v<?= htmlspecialchars($appVersion) ?> | © <?= date('Y') ?> <?= htmlspecialchars($authorOrg) ?> | Dezvoltat de <?= htmlspecialchars($authorName) ?></span>
         </div>
     </footer>
 

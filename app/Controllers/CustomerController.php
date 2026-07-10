@@ -8,7 +8,7 @@ class CustomerController extends Controller
         $this->requireAuth();
         $search = trim((string) ($_GET['search'] ?? ''));
         $customers = (new Customer())->listAll($search);
-        $this->view('customers/index', ['pageTitle' => 'Customers', 'customers' => $customers, 'search' => $search]);
+        $this->view('customers/index', ['pageTitle' => 'Clienți', 'customers' => $customers, 'search' => $search]);
     }
 
     public function create(): void
@@ -28,7 +28,7 @@ class CustomerController extends Controller
             $this->redirect('customers');
         }
 
-        $this->view('customers/form', ['pageTitle' => 'Add Customer', 'customer' => null]);
+        $this->view('customers/form', ['pageTitle' => 'Adaugă Client', 'customer' => null]);
     }
 
     public function edit(int $id): void
@@ -54,13 +54,21 @@ class CustomerController extends Controller
             $this->redirect('customers');
         }
 
-        $this->view('customers/form', ['pageTitle' => 'Edit Customer', 'customer' => $customer]);
+        $this->view('customers/form', ['pageTitle' => 'Editează Client', 'customer' => $customer]);
     }
 
     public function delete(int $id): void
     {
         $this->requireAuth();
-        (new Customer())->delete($id);
+        $customerModel = new Customer();
+        $devicesCount = $customerModel->countDevices($id);
+        $ordersCount = $customerModel->countServiceOrders($id);
+
+        if ($devicesCount > 0 || $ordersCount > 0) {
+            $this->redirect('customers?delete_error=linked_data');
+        }
+
+        $customerModel->delete($id);
         $this->redirect('customers');
     }
 }

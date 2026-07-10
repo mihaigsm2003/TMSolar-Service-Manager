@@ -95,7 +95,7 @@ abstract class Controller
     {
         if (!$this->hasPermission($permission)) {
             http_response_code(403);
-            echo 'Access denied.';
+            echo 'Acces interzis.';
             exit;
         }
     }

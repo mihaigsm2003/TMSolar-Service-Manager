@@ -27,7 +27,7 @@ class AuthController extends Controller
                 exit;
             }
 
-            $this->view('auth/login', ['error' => 'Invalid credentials.']);
+            $this->view('auth/login', ['error' => 'Date de autentificare invalide.']);
             return;
         }
 

@@ -11,7 +11,7 @@ class DeviceController extends Controller
         $customers = (new Customer())->listAll();
         $manufacturers = (new Manufacturer())->listAll();
         $models = (new DeviceModel())->listAll();
-        $this->view('devices/index', ['pageTitle' => 'Devices', 'devices' => $devices, 'customers' => $customers, 'manufacturers' => $manufacturers, 'models' => $models, 'search' => $search]);
+        $this->view('devices/index', ['pageTitle' => 'Dispozitive', 'devices' => $devices, 'customers' => $customers, 'manufacturers' => $manufacturers, 'models' => $models, 'search' => $search]);
     }
 
     public function create(): void
@@ -35,7 +35,7 @@ class DeviceController extends Controller
         $customers = (new Customer())->listAll();
         $manufacturers = (new Manufacturer())->listAll();
         $models = (new DeviceModel())->listAll();
-        $this->view('devices/form', ['pageTitle' => 'Add Device', 'device' => null, 'customers' => $customers, 'manufacturers' => $manufacturers, 'models' => $models]);
+        $this->view('devices/form', ['pageTitle' => 'Adaugă Dispozitiv', 'device' => null, 'customers' => $customers, 'manufacturers' => $manufacturers, 'models' => $models]);
     }
 
     public function edit(int $id): void
@@ -68,7 +68,7 @@ class DeviceController extends Controller
         $customers = (new Customer())->listAll();
         $manufacturers = (new Manufacturer())->listAll();
         $models = (new DeviceModel())->listAll();
-        $this->view('devices/form', ['pageTitle' => 'Edit Device', 'device' => $device, 'customers' => $customers, 'manufacturers' => $manufacturers, 'models' => $models]);
+        $this->view('devices/form', ['pageTitle' => 'Editează Dispozitiv', 'device' => $device, 'customers' => $customers, 'manufacturers' => $manufacturers, 'models' => $models]);
     }
 
     public function delete(int $id): void

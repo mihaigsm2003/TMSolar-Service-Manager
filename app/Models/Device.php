@@ -44,4 +44,13 @@ class Device extends Model
         $statement = $this->db->prepare('DELETE FROM devices WHERE id = :id');
         return $statement->execute([':id' => $id]);
     }
+
+    public function updatePurchaseDate(int $id, ?string $purchaseDate): bool
+    {
+        $statement = $this->db->prepare('UPDATE devices SET purchase_date = :purchase_date WHERE id = :id');
+        return $statement->execute([
+            ':id' => $id,
+            ':purchase_date' => $purchaseDate,
+        ]);
+    }
 }

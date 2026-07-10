@@ -1,17 +1,17 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
-        <h1 class="h3 mb-1">Manufacturers</h1>
-        <p class="text-muted mb-0">Maintain inverter and component manufacturer records.</p>
+        <h1 class="h3 mb-1">Producători</h1>
+        <p class="text-muted mb-0">Administrează evidența producătorilor de invertoare și componente.</p>
     </div>
-    <a href="<?= UrlHelper::to('manufacturers/create') ?>" class="btn btn-primary">Add Manufacturer</a>
+    <a href="<?= UrlHelper::to('manufacturers/create') ?>" class="btn btn-primary">Adaugă Producător</a>
 </div>
 
 <form method="get" class="row g-2 mb-3">
     <div class="col-md-8">
-        <input type="text" class="form-control" name="search" placeholder="Search manufacturers" value="<?= htmlspecialchars((string) $search) ?>">
+        <input type="text" class="form-control" name="search" placeholder="Caută producători" value="<?= htmlspecialchars((string) $search) ?>">
     </div>
     <div class="col-md-4">
-        <button class="btn btn-outline-secondary w-100" type="submit">Search</button>
+        <button class="btn btn-outline-secondary w-100" type="submit">Caută</button>
     </div>
 </form>
 
@@ -20,11 +20,11 @@
         <table class="table table-hover mb-0">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Contact</th>
-                    <th>Phone</th>
+                    <th>Nume</th>
+                    <th>Persoană Contact</th>
+                    <th>Telefon</th>
                     <th>Email</th>
-                    <th>Website</th>
+                    <th>Site Web</th>
                     <th></th>
                 </tr>
             </thead>
@@ -37,8 +37,8 @@
                         <td><?= htmlspecialchars((string) ($manufacturer['email'] ?? '')) ?></td>
                         <td><?= htmlspecialchars((string) ($manufacturer['website'] ?? '')) ?></td>
                         <td>
-                            <a href="<?= UrlHelper::to('manufacturers/edit/' . (int) $manufacturer['id']) ?>" class="btn btn-sm btn-outline-primary">Edit</a>
-                            <a href="<?= UrlHelper::to('manufacturers/delete/' . (int) $manufacturer['id']) ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this manufacturer?')">Delete</a>
+                            <a href="<?= UrlHelper::to('manufacturers/edit/' . (int) $manufacturer['id']) ?>" class="btn btn-sm btn-outline-primary">Editează</a>
+                            <a href="<?= UrlHelper::to('manufacturers/delete/' . (int) $manufacturer['id']) ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Ștergi acest producător?')">Șterge</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

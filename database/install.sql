@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS devices (
     purchase_date DATE NULL,
     photo VARCHAR(255) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_devices_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
+    CONSTRAINT fk_devices_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE RESTRICT,
     CONSTRAINT fk_devices_manufacturer FOREIGN KEY (manufacturer_id) REFERENCES manufacturers(id) ON DELETE CASCADE,
     CONSTRAINT fk_devices_model FOREIGN KEY (model_id) REFERENCES device_models(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -84,13 +84,15 @@ CREATE TABLE IF NOT EXISTS service_orders (
     received_date DATE NOT NULL,
     customer_id INT NOT NULL,
     device_id INT NOT NULL,
+    command_type VARCHAR(50) DEFAULT 'Service',
+    transport_type VARCHAR(30) DEFAULT 'Curier',
     accessories TEXT NULL,
     reported_fault TEXT NULL,
     diagnosed_fault TEXT NULL,
     repair_notes TEXT NULL,
     internal_notes TEXT NULL,
     priority VARCHAR(30) DEFAULT 'Normal',
-    status VARCHAR(50) DEFAULT 'Received',
+    status VARCHAR(50) DEFAULT 'Noua',
     repair_cost DECIMAL(10,2) DEFAULT 0.00,
     labour_cost DECIMAL(10,2) DEFAULT 0.00,
     shipping_cost DECIMAL(10,2) DEFAULT 0.00,
@@ -99,6 +101,6 @@ CREATE TABLE IF NOT EXISTS service_orders (
     photos VARCHAR(255) NULL,
     documents VARCHAR(255) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_service_orders_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
-    CONSTRAINT fk_service_orders_device FOREIGN KEY (device_id) REFERENCES devices(id) ON DELETE CASCADE
+    CONSTRAINT fk_service_orders_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE RESTRICT,
+    CONSTRAINT fk_service_orders_device FOREIGN KEY (device_id) REFERENCES devices(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

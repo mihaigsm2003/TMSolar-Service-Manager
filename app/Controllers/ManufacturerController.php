@@ -8,7 +8,7 @@ class ManufacturerController extends Controller
         $this->requireAuth();
         $search = trim((string) ($_GET['search'] ?? ''));
         $manufacturers = (new Manufacturer())->listAll($search);
-        $this->view('manufacturers/index', ['pageTitle' => 'Manufacturers', 'manufacturers' => $manufacturers, 'search' => $search]);
+        $this->view('manufacturers/index', ['pageTitle' => 'Producători', 'manufacturers' => $manufacturers, 'search' => $search]);
     }
 
     public function create(): void
@@ -26,7 +26,7 @@ class ManufacturerController extends Controller
             $this->redirect('manufacturers');
         }
 
-        $this->view('manufacturers/form', ['pageTitle' => 'Add Manufacturer', 'manufacturer' => null]);
+        $this->view('manufacturers/form', ['pageTitle' => 'Adaugă Producător', 'manufacturer' => null]);
     }
 
     public function edit(int $id): void
@@ -50,7 +50,7 @@ class ManufacturerController extends Controller
             $this->redirect('manufacturers');
         }
 
-        $this->view('manufacturers/form', ['pageTitle' => 'Edit Manufacturer', 'manufacturer' => $manufacturer]);
+        $this->view('manufacturers/form', ['pageTitle' => 'Editează Producător', 'manufacturer' => $manufacturer]);
     }
 
     public function delete(int $id): void

@@ -1,10 +1,10 @@
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-1">Users</h1>
-            <p class="text-muted mb-0">Manage application users and roles.</p>
+            <h1 class="h3 mb-1">Utilizatori</h1>
+            <p class="text-muted mb-0">Gestionează utilizatorii aplicației și rolurile acestora.</p>
         </div>
-        <a href="<?= UrlHelper::to('admin/create-user') ?>" class="btn btn-primary">Create User</a>
+        <a href="<?= UrlHelper::to('admin/create-user') ?>" class="btn btn-primary">Creează Utilizator</a>
     </div>
 
     <div class="card shadow-sm">
@@ -12,12 +12,12 @@
             <table class="table table-hover align-middle">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Nume</th>
                         <th>Email</th>
-                        <th>Role</th>
+                        <th>Rol</th>
                         <th>Status</th>
-                        <th>Created</th>
-                        <th class="text-end">Actions</th>
+                        <th>Creat la</th>
+                        <th class="text-end">Acțiuni</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,10 +30,10 @@
                             <td><?= htmlspecialchars((string) $user['created_at']) ?></td>
                             <td class="text-end">
                                 <div class="d-inline-flex gap-2">
-                                    <a href="<?= UrlHelper::to('admin/edit-user/' . (int) $user['id']) ?>" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a href="<?= UrlHelper::to('admin/edit-user/' . (int) $user['id']) ?>" class="btn btn-sm btn-outline-primary">Editează</a>
                                     <a href="<?= UrlHelper::to('admin/delete-user/' . (int) $user['id']) ?>"
                                        class="btn btn-sm btn-outline-danger"
-                                       onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+                                       onclick="return confirm('Sigur dorești să ștergi acest utilizator?');">Șterge</a>
                                 </div>
                             </td>
                         </tr>

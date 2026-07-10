@@ -9,7 +9,7 @@ class DeviceModelController extends Controller
         $search = trim((string) ($_GET['search'] ?? ''));
         $models = (new DeviceModel())->listAll($search);
         $manufacturers = (new Manufacturer())->listAll();
-        $this->view('device-models/index', ['pageTitle' => 'Device Models', 'models' => $models, 'manufacturers' => $manufacturers, 'search' => $search]);
+        $this->view('device-models/index', ['pageTitle' => 'Modele Dispozitive', 'models' => $models, 'manufacturers' => $manufacturers, 'search' => $search]);
     }
 
     public function create(): void
@@ -26,7 +26,7 @@ class DeviceModelController extends Controller
         }
 
         $manufacturers = (new Manufacturer())->listAll();
-        $this->view('device-models/form', ['pageTitle' => 'Add Device Model', 'model' => null, 'manufacturers' => $manufacturers]);
+        $this->view('device-models/form', ['pageTitle' => 'Adaugă Model Dispozitiv', 'model' => null, 'manufacturers' => $manufacturers]);
     }
 
     public function edit(int $id): void
@@ -49,7 +49,7 @@ class DeviceModelController extends Controller
         }
 
         $manufacturers = (new Manufacturer())->listAll();
-        $this->view('device-models/form', ['pageTitle' => 'Edit Device Model', 'model' => $deviceModel, 'manufacturers' => $manufacturers]);
+        $this->view('device-models/form', ['pageTitle' => 'Editează Model Dispozitiv', 'model' => $deviceModel, 'manufacturers' => $manufacturers]);
     }
 
     public function delete(int $id): void

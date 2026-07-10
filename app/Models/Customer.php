@@ -44,4 +44,18 @@ class Customer extends Model
         $statement = $this->db->prepare('DELETE FROM customers WHERE id = :id');
         return $statement->execute([':id' => $id]);
     }
+
+    public function countDevices(int $id): int
+    {
+        $statement = $this->db->prepare('SELECT COUNT(*) FROM devices WHERE customer_id = :id');
+        $statement->execute([':id' => $id]);
+        return (int) $statement->fetchColumn();
+    }
+
+    public function countServiceOrders(int $id): int
+    {
+        $statement = $this->db->prepare('SELECT COUNT(*) FROM service_orders WHERE customer_id = :id');
+        $statement->execute([':id' => $id]);
+        return (int) $statement->fetchColumn();
+    }
 }

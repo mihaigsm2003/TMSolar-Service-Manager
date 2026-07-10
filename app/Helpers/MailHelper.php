@@ -21,6 +21,9 @@ class MailHelper
             'mail_from_address' => 'no-reply@yourdomain.com',
             'mail_from_name' => APP_NAME,
             'support_email' => '',
+            'recaptcha_enabled' => '0',
+            'recaptcha_site_key' => '',
+            'recaptcha_secret_key' => '',
         ];
 
         try {
@@ -43,33 +46,52 @@ class MailHelper
      * @param array<string, string> $settings
      * @return array{success: bool, message: string}
      */
-    public static function send(string $toEmail, string $subject, string $body, array $settings = []): array
+    public static function send(string $toEmail, string $subject, string $body, array $settings = [], bool $isHtml = false): array
     {
         $mailSettings = $settings !== [] ? $settings : self::loadSettingsFromDatabase();
         $isTestEmail = stripos($subject, 'SMTP settings test - ') === 0;
 
         $notificationsEnabled = (string) ($mailSettings['email_notifications_enabled'] ?? '1');
         if (!$isTestEmail && $notificationsEnabled !== '1') {
-            return [
+            $result = [
                 'success' => false,
                 'message' => 'Email notifications are disabled from Settings.',
             ];
+            self::logMailFailure(trim($toEmail), $subject, $result['message']);
+            return $result;
         }
 
         $host = trim((string) ($mailSettings['mail_host'] ?? ''));
         $port = (int) (($mailSettings['mail_port'] ?? '587') ?: 587);
         $encryption = strtolower(trim((string) ($mailSettings['mail_encryption'] ?? 'tls')));
+        if ($encryption === 'starttls') {
+            $encryption = 'tls';
+        }
         $username = trim((string) ($mailSettings['mail_username'] ?? ''));
         $password = (string) ($mailSettings['mail_password'] ?? '');
         $fromAddress = trim((string) ($mailSettings['mail_from_address'] ?? ''));
         $fromName = trim((string) ($mailSettings['mail_from_name'] ?? APP_NAME));
         $recipient = trim($toEmail);
 
+        $encodedSubject = self::encodeHeader($subject);
+        $encodedFromName = self::encodeHeader($fromName);
+
         if ($host === '' || $port <= 0 || $fromAddress === '' || $recipient === '') {
-            return [
+            $result = [
                 'success' => false,
                 'message' => 'Missing required SMTP fields (host, port, from address, recipient).',
             ];
+            self::logMailFailure($recipient, $subject, $result['message']);
+            return $result;
+        }
+
+        if (!in_array($encryption, ['tls', 'ssl', 'none', ''], true)) {
+            $result = [
+                'success' => false,
+                'message' => 'Invalid SMTP encryption mode. Use tls, ssl, or none.',
+            ];
+            self::logMailFailure($recipient, $subject, $result['message']);
+            return $result;
         }
 
         $transportHost = $encryption === 'ssl' ? 'ssl://' . $host : $host;
@@ -85,10 +107,12 @@ class MailHelper
         $errstr = '';
         $socket = @stream_socket_client($transportHost . ':' . $port, $errno, $errstr, 10, STREAM_CLIENT_CONNECT, $context);
         if ($socket === false) {
-            return [
+            $result = [
                 'success' => false,
                 'message' => 'SMTP connection failed: ' . $errstr . ' (' . $errno . ')',
             ];
+            self::logMailFailure($recipient, $subject, $result['message']);
+            return $result;
         }
 
         stream_set_timeout($socket, 10);
@@ -132,13 +156,18 @@ class MailHelper
             self::sendSmtpCommand($socket, 'DATA');
             self::expectSmtpCode($socket, [354], 'DATA');
 
-            $safeBody = preg_replace('/^\./m', '..', $body) ?? $body;
+            $normalizedBody = str_replace(["\r\n", "\r"], "\n", $body);
+            $normalizedBody = str_replace("\n", "\r\n", $normalizedBody);
+            $safeBody = preg_replace('/^\./m', '..', $normalizedBody) ?? $normalizedBody;
             $message = '';
-            $message .= 'From: ' . $fromName . ' <' . $fromAddress . ">\r\n";
+            $message .= 'From: ' . $encodedFromName . ' <' . $fromAddress . ">\r\n";
             $message .= 'To: <' . $recipient . ">\r\n";
-            $message .= 'Subject: ' . $subject . "\r\n";
+            $message .= 'Subject: ' . $encodedSubject . "\r\n";
+            $message .= 'Date: ' . gmdate('D, d M Y H:i:s O') . "\r\n";
+            $message .= 'Message-ID: <' . bin2hex(random_bytes(8)) . '@' . preg_replace('/[^A-Za-z0-9.-]/', '', ($host !== '' ? $host : 'localhost')) . ">\r\n";
             $message .= "MIME-Version: 1.0\r\n";
-            $message .= "Content-Type: text/plain; charset=UTF-8\r\n";
+            $message .= 'Content-Type: ' . ($isHtml ? 'text/html' : 'text/plain') . "; charset=UTF-8\r\n";
+            $message .= "Content-Transfer-Encoding: 8bit\r\n";
             $message .= "\r\n";
             $message .= $safeBody . "\r\n.\r\n";
 
@@ -152,10 +181,12 @@ class MailHelper
                 'message' => 'Email sent successfully.',
             ];
         } catch (Throwable $exception) {
-            return [
+            $result = [
                 'success' => false,
                 'message' => 'Email send failed: ' . $exception->getMessage(),
             ];
+            self::logMailFailure($recipient, $subject, $result['message']);
+            return $result;
         } finally {
             fclose($socket);
         }
@@ -187,5 +218,30 @@ class MailHelper
         if (!in_array($code, $expectedCodes, true)) {
             throw new RuntimeException($stage . ' failed. Server response: ' . trim($response));
         }
+    }
+
+    private static function encodeHeader(string $value): string
+    {
+        $trimmed = trim($value);
+        if ($trimmed === '') {
+            return '';
+        }
+
+        if (preg_match('/[\x80-\xFF]/', $trimmed) === 1) {
+            return '=?UTF-8?B?' . base64_encode($trimmed) . '?=';
+        }
+
+        return $trimmed;
+    }
+
+    private static function logMailFailure(string $recipient, string $subject, string $error): void
+    {
+        $logDir = APP_ROOT . 'storage/logs';
+        if (!is_dir($logDir)) {
+            @mkdir($logDir, 0777, true);
+        }
+
+        $line = '[' . date('Y-m-d H:i:s') . '] MAIL_FAIL to=' . trim($recipient) . ' subject="' . trim($subject) . '" error=' . trim($error) . PHP_EOL;
+        @file_put_contents($logDir . '/mail.log', $line, FILE_APPEND);
     }
 }

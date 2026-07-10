@@ -82,6 +82,17 @@ class Router
                 $this->callServiceOrderAction($controller, $action, $id);
                 break;
 
+            case 'comanda-service':
+            case 'comanda-online':
+                $controller = new ServiceOrderController();
+                $action = $segments[1] ?? 'index';
+                if ($action === 'multumim') {
+                    $controller->publicThankYou();
+                } else {
+                    $controller->publicOrder();
+                }
+                break;
+
             case 'admin':
                 $controller = new AdminController();
                 $action = $segments[1] ?? 'settings';
@@ -106,7 +117,7 @@ class Router
 
             default:
                 http_response_code(404);
-                echo 'Page not found.';
+                echo 'Pagina nu a fost găsită.';
                 break;
         }
     }

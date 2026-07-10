@@ -21,18 +21,18 @@ class Installer
             $dbPass = (string) ($input['db_pass'] ?? '');
 
             if ($dbHost === '' || $dbName === '' || $dbUser === '') {
-                throw new RuntimeException('Please provide the MySQL host, database name, and username.');
+                throw new RuntimeException('Te rugăm să completezi host-ul MySQL, numele bazei de date și utilizatorul.');
             }
 
             if ($this->isAlreadyInstalled()) {
-                throw new RuntimeException('The application is already installed. Please use the existing setup.');
+                throw new RuntimeException('Aplicația este deja instalată. Folosește configurația existentă.');
             }
 
             $pdo = $this->connect($dbHost, $dbName, $dbUser, $dbPass);
 
             $sql = file_get_contents(APP_ROOT . 'database/install.sql');
             if ($sql === false) {
-                throw new RuntimeException('The installation SQL file could not be read.');
+                throw new RuntimeException('Fișierul SQL de instalare nu a putut fi citit.');
             }
 
             $pdo->exec($sql);
@@ -48,9 +48,9 @@ class Installer
             $configPath = APP_ROOT . 'config/config.php';
             $this->writeConfigFile($configPath, $dbHost, $dbName, $dbUser, $dbPass);
 
-            return ['success' => true, 'message' => 'Installation completed successfully.'];
+            return ['success' => true, 'message' => 'Instalarea s-a finalizat cu succes.'];
         } catch (Throwable $exception) {
-            return ['success' => false, 'message' => 'Installation failed: ' . $exception->getMessage()];
+            return ['success' => false, 'message' => 'Instalarea a eșuat: ' . $exception->getMessage()];
         }
     }
 
@@ -66,7 +66,7 @@ class Installer
             ]);
         } catch (PDOException $exception) {
             throw new PDOException(
-                'Database connection failed. Verify the host, database name, username, and password. On shared hosting, use the credentials from your hosting panel rather than root. Original error: ' . $exception->getMessage(),
+                'Conexiunea la baza de date a eșuat. Verifică host-ul, numele bazei de date, utilizatorul și parola. Pe hosting shared, folosește credențialele din panoul de hosting, nu root. Eroare originală: ' . $exception->getMessage(),
                 (int) $exception->getCode(),
                 $exception
             );
@@ -166,7 +166,7 @@ PHP;
         }
 
         if (file_put_contents($path, $configContents) === false) {
-            throw new RuntimeException('The configuration file could not be written. Please make sure the config folder is writable.');
+            throw new RuntimeException('Fișierul de configurare nu a putut fi scris. Asigură-te că folderul config are permisiuni de scriere.');
         }
     }
 }

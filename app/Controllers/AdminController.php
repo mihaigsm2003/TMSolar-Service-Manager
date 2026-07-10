@@ -28,6 +28,9 @@ class AdminController extends Controller
             if (!isset($_POST['settings']['email_notifications_enabled'])) {
                 $postedSettings['email_notifications_enabled'] = '0';
             }
+            if (!isset($_POST['settings']['recaptcha_enabled'])) {
+                $postedSettings['recaptcha_enabled'] = '0';
+            }
 
             $settings = array_replace($settings, $postedSettings);
             $action = (string) ($_POST['settings_action'] ?? 'save');
@@ -48,7 +51,7 @@ class AdminController extends Controller
         }
 
         $this->view('admin/settings', [
-            'pageTitle' => 'Settings',
+            'pageTitle' => 'Setări',
             'settings' => $settings,
             'mailTestResult' => $mailTestResult,
         ]);
@@ -68,18 +71,18 @@ class AdminController extends Controller
         if ($fromAddress === '' || $recipient === '') {
             return [
                 'success' => false,
-                'message' => 'Please fill in From Email and a test recipient.',
+                'message' => 'Completează emailul expeditorului și un destinatar de test.',
             ];
         }
         $result = MailHelper::send(
             $recipient,
             'SMTP settings test - ' . APP_NAME,
-            'This is a test email sent at ' . date('Y-m-d H:i:s') . ' to validate SMTP settings.',
+            'Acesta este un email de test trimis la ' . date('Y-m-d H:i:s') . ' pentru validarea setărilor SMTP.',
             $settings
         );
 
         if ($result['success']) {
-            $result['message'] = 'Test email sent successfully to ' . $recipient . '.';
+            $result['message'] = 'Emailul de test a fost trimis cu succes către ' . $recipient . '.';
         }
 
         return $result;
@@ -97,6 +100,9 @@ class AdminController extends Controller
             'mail_encryption' => 'tls',
             'mail_from_address' => 'no-reply@yourdomain.com',
             'mail_from_name' => 'TMSolar Service Manager',
+            'recaptcha_enabled' => '0',
+            'recaptcha_site_key' => '',
+            'recaptcha_secret_key' => '',
         ];
     }
 
@@ -145,7 +151,7 @@ class AdminController extends Controller
         $userModel = new User();
         $users = $userModel->listAll();
         $this->view('admin/users', [
-            'pageTitle' => 'Users',
+            'pageTitle' => 'Utilizatori',
             'users' => $users,
         ]);
     }
@@ -194,7 +200,7 @@ class AdminController extends Controller
             exit;
         }
 
-        $this->view('admin/create-user', ['pageTitle' => 'Create User']);
+        $this->view('admin/create-user', ['pageTitle' => 'Creează Utilizator']);
     }
 
     public function editUser(int $id): void
@@ -236,7 +242,7 @@ class AdminController extends Controller
         }
 
         $this->view('admin/edit-user', [
-            'pageTitle' => 'Edit User',
+            'pageTitle' => 'Editează Utilizator',
             'user' => $user,
         ]);
     }
@@ -283,7 +289,7 @@ class AdminController extends Controller
         $activity = $db->query('SELECT a.*, u.name FROM activity_log a LEFT JOIN users u ON u.id = a.user_id ORDER BY a.created_at DESC LIMIT 50')->fetchAll();
 
         $this->view('admin/activity-log', [
-            'pageTitle' => 'Activity Log',
+            'pageTitle' => 'Jurnal Activitate',
             'activity' => $activity,
         ]);
     }
