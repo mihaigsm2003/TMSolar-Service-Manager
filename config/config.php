@@ -31,6 +31,8 @@ $basePath = $detectedAppPath === '' ? '/' : $detectedAppPath . '/';
 $baseUrl = $scheme . '://' . $host . $basePath;
 
 define('APP_NAME', 'TMSolar Service Manager');
+define('APP_VERSION', '1.0.0');
+define('APP_AUTHOR', 'Mihai G. - TMSolar');
 define('APP_ENV', getenv('APP_ENV') ?: 'production');
 define('APP_ROOT', $appRoot . '/');
 define('APP_PATH', getenv('APP_PATH') ?: ($detectedAppPath === '' ? '/' : $detectedAppPath));

@@ -7,11 +7,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?= UrlHelper::asset('assets/css/app.css') ?>" rel="stylesheet">
 </head>
-<body class="bg-light">
+<body class="bg-light d-flex flex-column min-vh-100">
     <?php $user = $_SESSION['user'] ?? []; ?>
     <?php
     $brandSettings = $settings ?? [];
-    $brandText = 'TMSolar Service Manager';
+    $brandText = APP_NAME;
     $brandLogo = '';
 
     if (empty($brandSettings)) {
@@ -62,8 +62,10 @@
                             <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('admin/users') ?>">Users</a></li>
                             <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('admin/activity-log') ?>">Activity Log</a></li>
                         <?php endif; ?>
+                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('about.php') ?>">About</a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('logout') ?>">Logout</a></li>
                     <?php else: ?>
+                        <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('about.php') ?>">About</a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('login') ?>">Login</a></li>
                     <?php endif; ?>
                 </ul>
@@ -71,9 +73,23 @@
         </div>
     </nav>
 
-    <main class="container py-4">
+    <main class="container py-4 flex-grow-1">
         <?php if (isset($contentView) && is_file($contentView)) { require $contentView; } ?>
     </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <?php
+            $appName = defined('APP_NAME') ? APP_NAME : 'TMSolar Service Manager';
+            $appVersion = defined('APP_VERSION') ? APP_VERSION : '1.0.0';
+            $appAuthor = defined('APP_AUTHOR') ? APP_AUTHOR : 'Mihai Taranu. - TMSolar @mihaigsm2003';
+            $authorParts = explode(' - ', $appAuthor, 2);
+            $authorName = $authorParts[0] ?? $appAuthor;
+            $authorOrg = $authorParts[1] ?? 'TMSolar';
+            ?>
+            <span><?= htmlspecialchars($appName) ?> v<?= htmlspecialchars($appVersion) ?> | © <?= date('Y') ?> <?= htmlspecialchars($authorOrg) ?> | Developed by <?= htmlspecialchars($authorName) ?></span>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?= UrlHelper::asset('assets/js/app.js') ?>"></script>
