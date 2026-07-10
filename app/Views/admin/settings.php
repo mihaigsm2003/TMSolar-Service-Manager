@@ -28,6 +28,47 @@
                         <label class="form-label">Backup Folder</label>
                         <input type="text" class="form-control" name="settings[backup_folder]" value="<?= htmlspecialchars((string) ($settings['backup_folder'] ?? 'storage/backups')) ?>">
                     </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Navbar Brand Text</label>
+                        <input type="text" class="form-control" name="settings[navbar_brand_text]" value="<?= htmlspecialchars((string) ($settings['navbar_brand_text'] ?? 'Logo')) ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Navbar Logo URL</label>
+                        <input type="text" class="form-control" name="settings[navbar_logo_url]" value="<?= htmlspecialchars((string) ($settings['navbar_logo_url'] ?? '')) ?>" placeholder="assets/img/logo.png or https://example.com/logo.png">
+                        <div class="form-text">Leave blank to show text only. Use a relative path or a full URL.</div>
+                    </div>
+                </div>
+
+                <h2 class="h5 mt-4 mb-3">Email Server</h2>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">SMTP Host</label>
+                        <input type="text" class="form-control" name="settings[mail_host]" value="<?= htmlspecialchars((string) ($settings['mail_host'] ?? 'smtp.yourserver.com')) ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">SMTP Port</label>
+                        <input type="number" class="form-control" name="settings[mail_port]" value="<?= htmlspecialchars((string) ($settings['mail_port'] ?? '587')) ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Encryption</label>
+                        <input type="text" class="form-control" name="settings[mail_encryption]" value="<?= htmlspecialchars((string) ($settings['mail_encryption'] ?? 'tls')) ?>" placeholder="tls/ssl/none">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">SMTP Username</label>
+                        <input type="text" class="form-control" name="settings[mail_username]" value="<?= htmlspecialchars((string) ($settings['mail_username'] ?? 'your-email@yourdomain.com')) ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">SMTP Password</label>
+                        <input type="password" class="form-control" name="settings[mail_password]" value="<?= htmlspecialchars((string) ($settings['mail_password'] ?? 'your-password')) ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">From Email</label>
+                        <input type="email" class="form-control" name="settings[mail_from_address]" value="<?= htmlspecialchars((string) ($settings['mail_from_address'] ?? 'no-reply@yourdomain.com')) ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">From Name</label>
+                        <input type="text" class="form-control" name="settings[mail_from_name]" value="<?= htmlspecialchars((string) ($settings['mail_from_name'] ?? 'TMSolar Service Manager')) ?>">
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary mt-4">Save Settings</button>
             </form>

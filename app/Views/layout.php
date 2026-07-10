@@ -9,10 +9,42 @@
 </head>
 <body class="bg-light">
     <?php $user = $_SESSION['user'] ?? []; ?>
+    <?php
+    $brandSettings = $settings ?? [];
+    $brandText = 'TMSolar Service Manager';
+    $brandLogo = '';
+
+    if (empty($brandSettings)) {
+        try {
+            $brandDb = Database::getInstance();
+            $brandSettings = [];
+            foreach ($brandDb->query('SELECT setting_key, setting_value FROM settings') as $row) {
+                $brandSettings[(string) $row['setting_key']] = (string) $row['setting_value'];
+            }
+        } catch (Throwable $exception) {
+            $brandSettings = [];
+        }
+    }
+
+    if (!empty($brandSettings)) {
+        $brandText = trim((string) ($brandSettings['navbar_brand_text'] ?? $brandSettings['company_name'] ?? 'TMSolar Service Manager'));
+        $brandLogo = trim((string) ($brandSettings['navbar_logo_url'] ?? ''));
+        if ($brandLogo !== '' && !preg_match('#^https?://#i', $brandLogo)) {
+            $brandLogo = UrlHelper::asset($brandLogo);
+        }
+    }
+    ?>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="<?= UrlHelper::to('dashboard') ?>">TMSolar</a>
+            <a class="navbar-brand d-flex align-items-center gap-2" href="<?= UrlHelper::to('dashboard') ?>">
+                <?php if ($brandLogo !== ''): ?>
+                    <img src="<?= htmlspecialchars($brandLogo) ?>" alt="<?= htmlspecialchars($brandText ?: 'Brand Logo') ?>" height="32" class="d-inline-block">
+                <?php endif; ?>
+                <?php if ($brandText !== ''): ?>
+                    <span><?= htmlspecialchars($brandText) ?></span>
+                <?php endif; ?>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
                 <span class="navbar-toggler-icon"></span>
             </button>

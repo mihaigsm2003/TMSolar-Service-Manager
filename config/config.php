@@ -36,9 +36,9 @@ define('APP_ROOT', $appRoot . '/');
 define('APP_PATH', getenv('APP_PATH') ?: ($detectedAppPath === '' ? '/' : $detectedAppPath));
 define('BASE_URL', getenv('BASE_URL') ?: $baseUrl);
 
-define('DB_HOST', getenv('DB_HOST') ?: '');
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
 define('DB_NAME', getenv('DB_NAME') ?: 'tmsolar_service_manager');
-define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_USER', getenv('DB_USER') ?: '');
 define('DB_PASS', getenv('DB_PASS') ?: '');
 define('DB_CHARSET', 'utf8mb4');
 

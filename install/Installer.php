@@ -57,11 +57,20 @@ class Installer
     private function connect(string $dbHost, string $dbName, string $dbUser, string $dbPass): PDO
     {
         $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8mb4', $dbHost, $dbName);
-        $pdo = new PDO($dsn, $dbUser, $dbPass, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
-        ]);
+
+        try {
+            $pdo = new PDO($dsn, $dbUser, $dbPass, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false,
+            ]);
+        } catch (PDOException $exception) {
+            throw new PDOException(
+                'Database connection failed. Verify the host, database name, username, and password. On shared hosting, use the credentials from your hosting panel rather than root. Original error: ' . $exception->getMessage(),
+                (int) $exception->getCode(),
+                $exception
+            );
+        }
 
         return $pdo;
     }
