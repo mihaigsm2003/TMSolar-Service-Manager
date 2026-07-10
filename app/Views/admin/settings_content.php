@@ -8,6 +8,12 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
+            <?php if (!empty($mailTestResult)): ?>
+                <div class="alert <?= !empty($mailTestResult['success']) ? 'alert-success' : 'alert-danger' ?>" role="alert">
+                    <?= htmlspecialchars((string) ($mailTestResult['message'] ?? '')) ?>
+                </div>
+            <?php endif; ?>
+
             <form method="post">
                 <div class="row g-3">
                     <div class="col-md-6">
@@ -39,6 +45,13 @@
 
                 <h2 class="h5 mt-4 mb-3">Email Server</h2>
                 <div class="row g-3">
+                    <div class="col-12">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="emailNotificationsEnabled" name="settings[email_notifications_enabled]" value="1" <?= (($settings['email_notifications_enabled'] ?? '1') === '1') ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="emailNotificationsEnabled">Enable email notifications</label>
+                        </div>
+                        <div class="form-text">When disabled, automatic notification emails are skipped.</div>
+                    </div>
                     <div class="col-md-6">
                         <label class="form-label">SMTP Host</label>
                         <input type="text" class="form-control" name="settings[mail_host]" value="<?= htmlspecialchars((string) ($settings['mail_host'] ?? 'smtp.yourserver.com')) ?>">
@@ -67,8 +80,17 @@
                         <label class="form-label">From Name</label>
                         <input type="text" class="form-control" name="settings[mail_from_name]" value="<?= htmlspecialchars((string) ($settings['mail_from_name'] ?? 'TMSolar Service Manager')) ?>">
                     </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Test Recipient Email</label>
+                        <input type="email" class="form-control" name="test_email_to" value="<?= htmlspecialchars((string) ($settings['support_email'] ?? $settings['mail_from_address'] ?? '')) ?>" placeholder="recipient@example.com">
+                        <div class="form-text">Used only for server verification. It is not saved in settings.</div>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary mt-4">Save Settings</button>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" name="settings_action" value="save" class="btn btn-primary">Save Settings</button>
+                    <button type="submit" name="settings_action" value="test_email" class="btn btn-outline-secondary">Test Email Settings</button>
+                </div>
             </form>
         </div>
     </div>

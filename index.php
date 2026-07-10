@@ -19,6 +19,7 @@ require_once __DIR__ . '/app/Core/Controller.php';
 require_once __DIR__ . '/app/Core/Model.php';
 require_once __DIR__ . '/app/Core/Router.php';
 require_once __DIR__ . '/app/Helpers/UrlHelper.php';
+require_once __DIR__ . '/app/Helpers/MailHelper.php';
 require_once __DIR__ . '/app/Models/User.php';
 require_once __DIR__ . '/app/Controllers/AuthController.php';
 require_once __DIR__ . '/app/Controllers/DashboardController.php';

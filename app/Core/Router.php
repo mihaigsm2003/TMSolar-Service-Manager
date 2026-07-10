@@ -91,6 +91,12 @@ class Router
                     $controller->users();
                 } elseif ($action === 'create-user') {
                     $controller->createUser();
+                } elseif ($action === 'edit-user') {
+                    $id = (int) ($segments[2] ?? 0);
+                    $controller->editUser($id);
+                } elseif ($action === 'delete-user') {
+                    $id = (int) ($segments[2] ?? 0);
+                    $controller->deleteUser($id);
                 } elseif ($action === 'activity-log') {
                     $controller->activityLog();
                 } else {

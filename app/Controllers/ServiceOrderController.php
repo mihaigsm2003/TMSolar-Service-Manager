@@ -43,7 +43,25 @@ class ServiceOrderController extends Controller
                 ':photos' => $photos,
                 ':documents' => $documents,
             ];
-            (new ServiceOrder())->create($data);
+
+            $orderId = (new ServiceOrder())->create($data);
+            $customer = (new Customer())->find((int) $data[':customer_id']);
+            $customerEmail = trim((string) ($customer['email'] ?? ''));
+
+            if ($customerEmail !== '') {
+                $customerName = trim((string) (($customer['first_name'] ?? '') . ' ' . ($customer['last_name'] ?? '')));
+                $body = "Hello " . ($customerName !== '' ? $customerName : 'Customer') . ",\n\n";
+                $body .= "Your service order has been created in " . APP_NAME . ".\n";
+                $body .= "Order number: " . (string) $data[':order_number'] . "\n";
+                $body .= "Status: " . (string) $data[':status'] . "\n";
+                $body .= "Received date: " . (string) $data[':received_date'] . "\n";
+
+                $result = MailHelper::send($customerEmail, 'Service order created - ' . (string) $data[':order_number'], $body);
+                if (!$result['success']) {
+                    $this->logActivity('email_error', 'Service order create email failed for order #' . $orderId . ': ' . $result['message']);
+                }
+            }
+
             $this->redirect('service-orders');
         }
 
@@ -94,7 +112,29 @@ class ServiceOrderController extends Controller
                 ':photos' => $photos,
                 ':documents' => $documents,
             ];
+
+            $previousStatus = (string) ($order['status'] ?? '');
+            $newStatus = (string) $data[':status'];
             $orderModel->update($id, $data);
+
+            if ($newStatus !== $previousStatus) {
+                $customer = (new Customer())->find((int) $data[':customer_id']);
+                $customerEmail = trim((string) ($customer['email'] ?? ''));
+                if ($customerEmail !== '') {
+                    $customerName = trim((string) (($customer['first_name'] ?? '') . ' ' . ($customer['last_name'] ?? '')));
+                    $body = "Hello " . ($customerName !== '' ? $customerName : 'Customer') . ",\n\n";
+                    $body .= "The status of your service order has been updated.\n";
+                    $body .= "Order number: " . (string) $data[':order_number'] . "\n";
+                    $body .= "Previous status: " . $previousStatus . "\n";
+                    $body .= "New status: " . $newStatus . "\n";
+
+                    $result = MailHelper::send($customerEmail, 'Service order status updated - ' . (string) $data[':order_number'], $body);
+                    if (!$result['success']) {
+                        $this->logActivity('email_error', 'Service order status email failed for order #' . $id . ': ' . $result['message']);
+                    }
+                }
+            }
+
             $this->redirect('service-orders');
         }
 

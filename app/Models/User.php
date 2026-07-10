@@ -51,17 +51,38 @@ class User extends Model
         return $statement->fetchAll();
     }
 
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function find(int $id)
+    {
+        $statement = $this->db->prepare('SELECT * FROM users WHERE id = :id LIMIT 1');
+        $statement->execute([':id' => $id]);
+
+        return $statement->fetch();
+    }
+
     public function update(int $id, array $data): bool
     {
-        $statement = $this->db->prepare('UPDATE users SET name = :name, email = :email, role = :role, status = :status, permissions = :permissions WHERE id = :id');
-        return $statement->execute([
+        $sql = 'UPDATE users SET name = :name, email = :email, role = :role, status = :status, permissions = :permissions';
+        $params = [
             ':name' => $data['name'],
             ':email' => $data['email'],
             ':role' => $data['role'],
             ':status' => $data['status'],
             ':permissions' => $data['permissions'],
             ':id' => $id,
-        ]);
+        ];
+
+        if (!empty($data['password'])) {
+            $sql .= ', password_hash = :password_hash';
+            $params[':password_hash'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        }
+
+        $sql .= ' WHERE id = :id';
+
+        $statement = $this->db->prepare($sql);
+        return $statement->execute($params);
     }
 
     public function delete(int $id): bool

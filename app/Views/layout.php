@@ -8,7 +8,7 @@
     <link href="<?= UrlHelper::asset('assets/css/app.css') ?>" rel="stylesheet">
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
-    <?php $user = $_SESSION['user'] ?? []; ?>
+    <?php $currentUser = $_SESSION['user'] ?? []; ?>
     <?php
     $brandSettings = $settings ?? [];
     $brandText = APP_NAME;
@@ -57,7 +57,7 @@
                         <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('device-models') ?>">Device Models</a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('devices') ?>">Devices</a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('service-orders') ?>">Service Orders</a></li>
-                        <?php if (($user['role'] ?? 'viewer') === 'admin'): ?>
+                        <?php if (($currentUser['role'] ?? 'viewer') === 'admin'): ?>
                             <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('admin/settings') ?>">Settings</a></li>
                             <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('admin/users') ?>">Users</a></li>
                             <li class="nav-item"><a class="nav-link" href="<?= UrlHelper::to('admin/activity-log') ?>">Activity Log</a></li>
@@ -81,7 +81,7 @@
         <div class="container">
             <?php
             $appName = defined('APP_NAME') ? APP_NAME : 'TMSolar Service Manager';
-            $appVersion = defined('APP_VERSION') ? APP_VERSION : '1.0.0';
+            $appVersion = defined('APP_VERSION') ? APP_VERSION : '1.0.1';
             $appAuthor = defined('APP_AUTHOR') ? APP_AUTHOR : 'Mihai Taranu. - TMSolar @mihaigsm2003';
             $authorParts = explode(' - ', $appAuthor, 2);
             $authorName = $authorParts[0] ?? $appAuthor;

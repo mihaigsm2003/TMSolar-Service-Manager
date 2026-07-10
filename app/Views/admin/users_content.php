@@ -17,6 +17,7 @@
                         <th>Role</th>
                         <th>Status</th>
                         <th>Created</th>
+                        <th class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,6 +28,14 @@
                             <td><?= htmlspecialchars((string) $user['role']) ?></td>
                             <td><?= htmlspecialchars((string) $user['status']) ?></td>
                             <td><?= htmlspecialchars((string) $user['created_at']) ?></td>
+                            <td class="text-end">
+                                <div class="d-inline-flex gap-2">
+                                    <a href="<?= UrlHelper::to('admin/edit-user/' . (int) $user['id']) ?>" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a href="<?= UrlHelper::to('admin/delete-user/' . (int) $user['id']) ?>"
+                                       class="btn btn-sm btn-outline-danger"
+                                       onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+                                </div>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

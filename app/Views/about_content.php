@@ -2,7 +2,7 @@
     <div class="card-body">
         <?php
         $appName = defined('APP_NAME') ? APP_NAME : 'TMSolar Service Manager';
-        $appVersion = defined('APP_VERSION') ? APP_VERSION : '1.0.0';
+        $appVersion = defined('APP_VERSION') ? APP_VERSION : '1.0.1';
         $appAuthor = defined('APP_AUTHOR') ? APP_AUTHOR : 'Mihai G. - TMSolar';
         ?>
         <h1 class="h3 mb-4">About</h1>
